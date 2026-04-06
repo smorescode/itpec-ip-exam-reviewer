@@ -3,30 +3,42 @@
 function buttonClassName({
   isCurrent,
   isAnswered,
+  isIncorrect,
 }: {
   isCurrent: boolean;
   isAnswered: boolean;
+  isIncorrect: boolean;
 }) {
+  if (isCurrent && isIncorrect) {
+    return "tone-danger";
+  }
+
   if (isCurrent) {
-    return "border-amber-300 bg-amber-300 text-slate-950";
+    return "btn-primary";
+  }
+
+  if (isIncorrect) {
+    return "tone-danger";
   }
 
   if (isAnswered) {
-    return "border-emerald-400/50 bg-emerald-500/15 text-emerald-100";
+    return "tone-success";
   }
 
-  return "border-slate-700 bg-slate-900 text-slate-300 hover:border-slate-500";
+  return "btn-secondary";
 }
 
 export function QuestionJumpGrid({
   total,
   currentIndex,
   isAnswered,
+  isIncorrect,
   onJump,
 }: {
   total: number;
   currentIndex: number;
   isAnswered: (index: number) => boolean;
+  isIncorrect?: (index: number) => boolean;
   onJump: (index: number) => void;
 }) {
   if (!total) {
@@ -35,9 +47,9 @@ export function QuestionJumpGrid({
 
   return (
     <div className="space-y-3">
-      <div className="flex items-center justify-between text-xs uppercase tracking-[0.18em] text-slate-400">
+      <div className="text-muted flex items-center justify-between text-xs uppercase tracking-[0.18em]">
         <span>Jump To</span>
-        <span>Gray = skipped</span>
+        <span>Neutral = skipped, red = wrong</span>
       </div>
       <div className="grid grid-cols-5 gap-2">
         {Array.from({ length: total }, (_, index) => (
@@ -49,6 +61,7 @@ export function QuestionJumpGrid({
               {
                 isCurrent: currentIndex === index,
                 isAnswered: isAnswered(index),
+                isIncorrect: isIncorrect?.(index) ?? false,
               },
             )}`}
           >

@@ -190,18 +190,18 @@ export function PracticeClient({
 
   return (
     <div className="grid gap-6 xl:grid-cols-[320px_minmax(0,1fr)]">
-      <aside className="space-y-5 rounded-[1.75rem] border border-slate-800 bg-slate-950/75 p-5 shadow-[0_20px_60px_rgba(0,0,0,0.3)]">
+      <aside className="card-panel space-y-5 rounded-[1.75rem] p-5">
         <div>
-          <p className="text-sm font-semibold uppercase tracking-[0.18em] text-slate-400">
+          <p className="text-muted text-sm font-semibold uppercase tracking-[0.18em]">
             Practice Setup
           </p>
           <div className="mt-4 space-y-4">
-            <label className="block text-sm font-medium text-slate-300">
+            <label className="block text-sm font-medium">
               Year
               <select
                 value={yearFilter}
                 onChange={(event) => resetPractice(event.target.value, seasonFilter)}
-                className="mt-2 w-full rounded-2xl border border-slate-700 bg-slate-900 px-4 py-3 text-slate-100"
+                className="field mt-2 rounded-2xl px-4 py-3"
               >
                 <option value="all">All years</option>
                 {years.map((year) => (
@@ -212,12 +212,12 @@ export function PracticeClient({
               </select>
             </label>
 
-            <label className="block text-sm font-medium text-slate-300">
+            <label className="block text-sm font-medium">
               Sitting
               <select
                 value={seasonFilter}
                 onChange={(event) => resetPractice(yearFilter, event.target.value)}
-                className="mt-2 w-full rounded-2xl border border-slate-700 bg-slate-900 px-4 py-3 text-slate-100"
+                className="field mt-2 rounded-2xl px-4 py-3"
               >
                 <option value="all">All sittings</option>
                 <option value="S">Spring</option>
@@ -227,8 +227,8 @@ export function PracticeClient({
           </div>
         </div>
 
-        <div className="rounded-2xl bg-slate-900 px-4 py-4 text-sm text-slate-300">
-          <p className="font-semibold text-slate-100">{questionIds.length} questions loaded</p>
+        <div className="soft-panel text-muted rounded-2xl px-4 py-4 text-sm">
+          <p className="font-semibold text-inherit">{questionIds.length} questions loaded</p>
           <p className="mt-2">Answered: {Object.keys(submitted).length}</p>
           <p className="mt-1">Correct: {calculateScore(questionIds, answers, exams)}</p>
         </div>
@@ -237,13 +237,22 @@ export function PracticeClient({
           total={questionIds.length}
           currentIndex={index}
           isAnswered={(questionIndex) => Boolean(answers[questionIds[questionIndex]])}
+          isIncorrect={(questionIndex) => {
+            const questionId = questionIds[questionIndex];
+            if (!questionId || !submitted[questionId]) {
+              return false;
+            }
+
+            const question = allQuestions.find((item) => item.id === questionId);
+            return Boolean(question && answers[questionId] !== question.correctAnswer);
+          }}
           onJump={setIndex}
         />
 
         <button
           type="button"
           onClick={finishSession}
-          className="w-full rounded-full bg-amber-300 px-4 py-3 text-sm font-semibold text-slate-950 transition hover:bg-amber-200"
+          className="btn-primary w-full rounded-full px-4 py-3 text-sm font-semibold"
         >
           Save Practice Result
         </button>
@@ -271,14 +280,14 @@ export function PracticeClient({
               <button
                 type="button"
                 onClick={() => setIndex((current) => Math.max(0, current - 1))}
-                className="rounded-full border border-slate-600 px-4 py-3 text-sm font-semibold text-slate-200 transition hover:border-slate-400"
+                className="btn-outline rounded-full px-4 py-3 text-sm font-semibold"
               >
                 Previous
               </button>
               <button
                 type="button"
                 onClick={handleSubmit}
-                className="rounded-full bg-amber-300 px-4 py-3 text-sm font-semibold text-slate-950 transition hover:bg-amber-200"
+                className="btn-primary rounded-full px-4 py-3 text-sm font-semibold"
               >
                 Check Answer
               </button>
@@ -287,14 +296,14 @@ export function PracticeClient({
                 onClick={() =>
                   setIndex((current) => Math.min(questionIds.length - 1, current + 1))
                 }
-                className="rounded-full bg-slate-100 px-4 py-3 text-sm font-semibold text-slate-950 transition hover:bg-white"
+                className="btn-secondary rounded-full px-4 py-3 text-sm font-semibold"
               >
                 Next
               </button>
             </div>
           </>
         ) : (
-          <div className="rounded-[1.75rem] border border-dashed border-slate-700 bg-slate-950/40 p-8 text-slate-400">
+          <div className="surface-empty rounded-[1.75rem] p-8">
             No questions matched the current filters.
           </div>
         )}

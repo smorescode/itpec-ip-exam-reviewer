@@ -16,18 +16,18 @@ function choiceClassName({
   correctAnswer: ChoiceKey;
 }) {
   if (submitted && choiceKey === correctAnswer) {
-    return "border-emerald-400 bg-emerald-500/15 text-emerald-100";
+    return "tone-success";
   }
 
   if (submitted && choiceKey === selectedAnswer && selectedAnswer !== correctAnswer) {
-    return "border-rose-400 bg-rose-500/15 text-rose-100";
+    return "tone-danger";
   }
 
   if (choiceKey === selectedAnswer) {
-    return "border-sky-400 bg-sky-500/15 text-sky-100";
+    return "tone-primary";
   }
 
-  return "border-slate-700 bg-slate-900/70 text-slate-100 hover:border-slate-500";
+  return "btn-secondary border";
 }
 
 export function QuestionCard({
@@ -50,36 +50,36 @@ export function QuestionCard({
   extraNote?: string;
 }) {
   return (
-    <article className="rounded-[1.75rem] border border-slate-800 bg-slate-950/80 p-5 shadow-[0_20px_60px_rgba(0,0,0,0.3)] sm:p-7">
+    <article className="card-panel rounded-[1.75rem] p-5 sm:p-7">
       <div className="mb-5 flex flex-wrap items-center gap-3">
-        <span className="rounded-full bg-slate-800 px-3 py-1 text-xs font-semibold uppercase tracking-[0.24em] text-amber-200">
+        <span className="badge-warning rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-[0.24em]">
           {examTitle}
         </span>
-        <span className="rounded-full bg-slate-800 px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-slate-300">
+        <span className="badge-neutral rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em]">
           Original Exam Q{question.number}
         </span>
         {progressLabel ? (
-          <span className="rounded-full bg-sky-500/15 px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-sky-100">
+          <span className="badge-primary rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em]">
             {progressLabel}
           </span>
         ) : null}
         {question.hasIncompleteText ? (
-          <span className="rounded-full bg-amber-500/20 px-3 py-1 text-xs font-semibold text-amber-200">
+          <span className="badge-warning rounded-full px-3 py-1 text-xs font-semibold">
             Partial PDF extraction
           </span>
         ) : null}
         {question.likelyRequiresDiagram ? (
-          <span className="rounded-full bg-rose-500/20 px-3 py-1 text-xs font-semibold text-rose-200">
+          <span className="badge-danger rounded-full px-3 py-1 text-xs font-semibold">
             Missing diagram reference
           </span>
         ) : null}
       </div>
 
       <div className="space-y-4">
-        <p className="text-lg leading-8 text-slate-100">{question.prompt}</p>
+        <p className="text-lg leading-8">{question.prompt}</p>
 
         {question.likelyRequiresDiagram || question.parseWarning || extraNote ? (
-          <div className="rounded-2xl border border-amber-500/30 bg-amber-500/10 px-4 py-3 text-sm leading-6 text-amber-100">
+          <div className="tone-warning rounded-2xl border px-4 py-3 text-sm leading-6">
             {question.likelyRequiresDiagram
               ? "This question appears to reference a figure, table, or diagram that the app cannot display from the PDF extraction."
               : question.parseWarning ?? extraNote}
@@ -102,7 +102,7 @@ export function QuestionCard({
                 },
               )} ${locked ? "cursor-default" : ""}`}
             >
-              <span className="mr-3 inline-flex h-7 w-7 items-center justify-center rounded-full bg-white/10 text-xs font-bold uppercase">
+              <span className="ghost-panel mr-3 inline-flex h-7 w-7 items-center justify-center rounded-full text-xs font-bold uppercase">
                 {choiceKey}
               </span>
               {question.choices[choiceKey]}
@@ -114,8 +114,8 @@ export function QuestionCard({
           <p
             className={`rounded-2xl px-4 py-3 text-sm font-medium ${
               selectedAnswer === question.correctAnswer
-                ? "bg-emerald-500/15 text-emerald-100"
-                : "bg-rose-500/15 text-rose-100"
+                ? "tone-success"
+                : "tone-danger"
             }`}
           >
             {selectedAnswer === question.correctAnswer
